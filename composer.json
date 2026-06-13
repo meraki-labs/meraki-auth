@@ -1,0 +1,33 @@
+{
+  "name": "merakilab/meraki-auth",
+  "description": "Authentication package for the MerakiLabs ecosystem",
+  "version": "dev-main",
+  "type": "library",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Meraki\\Packages\\Auth\\": "src/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Meraki\\Packages\\Auth\\AuthServiceProvider"
+      ],
+      "aliases": {
+        "MerakiAuth": "Meraki\\Packages\\Auth\\Facades\\MerakiAuth"
+      }
+    }
+  },
+  "authors": [
+    {
+      "name": "DatPA",
+      "email": "datpa@merakilabs.tech"
+    }
+  ],
+  "require": {
+    "php": "^8.2",
+    "laravel/framework": "^12.0",
+    "merakilab/meraki-core": "*"
+  }
+}

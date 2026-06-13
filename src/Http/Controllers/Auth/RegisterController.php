@@ -1,0 +1,38 @@
+<?php
+
+namespace Meraki\Packages\Auth\Http\Controllers\Auth;
+
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
+use Meraki\Packages\Auth\Contracts\AuthManager;
+
+class RegisterController extends Controller
+{
+    public function __construct(private AuthManager $auth) {}
+
+    public function create()
+    {
+        return view('meraki-auth::auth.register');
+    }
+
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'name'     => ['required', 'string', 'max:255'],
+            'email'    => ['required', 'email', 'unique:users'],
+            'password' => ['required', 'min:8', 'confirmed'],
+        ]);
+
+        $user = $this->auth->register($data);
+        Auth::login($user);
+
+        if ($user instanceof MustVerifyEmail && !$user->hasVerifiedEmail()) {
+            $user->sendEmailVerificationNotification();
+            return redirect()->route('verification.notice');
+        }
+
+        return redirect()->route('dashboard');
+    }
+}
