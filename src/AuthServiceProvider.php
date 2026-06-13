@@ -2,6 +2,7 @@
 
 namespace Meraki\Packages\Auth;
 
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Meraki\Core\Modules\PermissionRegistry;
 use Meraki\Packages\Auth\Contracts\AuthManager;
@@ -35,6 +36,10 @@ class AuthServiceProvider extends ServiceProvider
                     => database_path('migrations/' . date('Y_m_d_His') . '_create_auth_tables.php'),
             ], ['meraki-migrations', 'meraki-auth-migrations']);
         }
+
+        View::composer('meraki-auth::*', function ($view) {
+            $view->with('themeVars', config('meraki-auth.ui.theme', []));
+        });
 
         $this->registerPermissions();
     }

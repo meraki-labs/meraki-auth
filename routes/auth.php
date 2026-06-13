@@ -8,6 +8,7 @@ use Meraki\Packages\Auth\Http\Controllers\Auth\RegisterController;
 use Meraki\Packages\Auth\Http\Controllers\Auth\ResendEmailVerificationController;
 use Meraki\Packages\Auth\Http\Controllers\Auth\ResetPasswordController;
 use Meraki\Packages\Auth\Http\Controllers\Auth\VerifyEmailController;
+use Meraki\Packages\Auth\Http\Controllers\Admin\AdminUserController;
 
 Route::middleware('web')->group(function () {
 
@@ -23,6 +24,10 @@ Route::middleware('web')->group(function () {
 
         Route::get('/reset-password/{token}', [ResetPasswordController::class, 'create'])->name('password.reset');
         Route::post('/reset-password', [ResetPasswordController::class, 'store'])->name('password.update');
+    });
+
+    Route::middleware(['auth'])->prefix('meraki-admin')->name('meraki.admin.')->group(function () {
+        Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
     });
 
     Route::middleware('auth')->group(function () {

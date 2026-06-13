@@ -22,4 +22,23 @@ return [
         ['module' => 'auth', 'name' => 'auth.password.reset',  'label' => 'Reset Password'],
     ],
 
+    /*
+     * UI theming — all values become CSS custom properties injected into every view.
+     * Override any key after publishing config; no need to publish views.
+     */
+    'ui' => [
+        'theme' => [
+            'bg'           => '#FDFDFC',
+            'bg_dark'      => '#0a0a0a',
+            'text'         => '#1b1b18',
+            'text_dark'    => '#EDEDEC',
+            'primary'      => '#6c63ff',
+            'primary_dark' => '#8b85ff',
+            'border'       => '#e3e3e0',
+            'border_dark'  => '#3E3E3A',
+            'radius'       => '0.5rem',
+            'font'         => '"Instrument Sans", sans-serif',
+        ],
+    ],
+
 ];
