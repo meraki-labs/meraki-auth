@@ -11,6 +11,11 @@
       "Meraki\\Packages\\Auth\\": "src/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Meraki\\Packages\\Auth\\Tests\\": "tests/"
+    }
+  },
   "extra": {
     "laravel": {
       "providers": [
@@ -31,16 +36,13 @@
   "require": {
     "php": "^8.2",
     "laravel/framework": "^12.0",
+    "laravel/sanctum": "^4.0",
     "merakilab/meraki-core": "*"
   },
   "require-dev": {
     "orchestra/testbench": "^10.0",
-    "phpunit/phpunit": "^11.0"
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Meraki\\Packages\\Auth\\Tests\\": "tests/"
-    }
+    "phpunit/phpunit": "^11.0",
+    "mockery/mockery": "^1.6"
   },
   "scripts": {
     "test": "vendor/bin/phpunit"
