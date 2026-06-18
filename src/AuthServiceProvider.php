@@ -2,9 +2,12 @@
 
 namespace Meraki\Packages\Auth;
 
+use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 use Meraki\Core\Modules\PermissionRegistry;
 use Meraki\Packages\Auth\Contracts\AuthManager;
+use Meraki\Packages\Auth\Http\Middleware\EnsureAuthDriverActive;
+use Meraki\Packages\Auth\Services\AuthDriverManager;
 use Meraki\Packages\Auth\Services\AuthManager as AuthManagerImpl;
 
 class AuthServiceProvider extends ServiceProvider
@@ -14,10 +17,19 @@ class AuthServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__ . '/../config/meraki-auth.php', 'meraki-auth');
 
         $this->app->singleton(AuthManager::class, AuthManagerImpl::class);
+
+        $this->app->singleton(AuthDriverManager::class, function ($app) {
+            return new AuthDriverManager(
+                $app->make(PermissionRegistry::class),
+            );
+        });
     }
 
     public function boot(): void
     {
+        $router = $this->app->make(Router::class);
+        $router->aliasMiddleware('meraki.auth.active', EnsureAuthDriverActive::class);
+
         $this->loadRoutesFrom(__DIR__ . '/../routes/auth.php');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'meraki-auth');
 
@@ -36,7 +48,9 @@ class AuthServiceProvider extends ServiceProvider
             ], ['meraki-migrations', 'meraki-auth-migrations']);
         }
 
-        $this->registerPermissions();
+        if ($this->app->make(AuthDriverManager::class)->isActive()) {
+            $this->registerPermissions();
+        }
     }
 
     protected function registerPermissions(): void

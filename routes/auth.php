@@ -9,7 +9,7 @@ use Meraki\Packages\Auth\Http\Controllers\Auth\ResendEmailVerificationController
 use Meraki\Packages\Auth\Http\Controllers\Auth\ResetPasswordController;
 use Meraki\Packages\Auth\Http\Controllers\Auth\VerifyEmailController;
 
-Route::middleware('web')->group(function () {
+Route::middleware(['web', 'meraki.auth.active'])->group(function () {
 
     Route::middleware('guest')->group(function () {
         Route::get('/login', [LoginController::class, 'create'])->name('login');

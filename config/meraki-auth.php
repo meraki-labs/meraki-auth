@@ -4,6 +4,11 @@ return [
 
     'enabled' => env('MERAKI_AUTH_ENABLED', true),
 
+    'driver' => [
+        'name'   => 'meraki-auth',
+        'active' => env('MERAKI_AUTH_ACTIVE', true),
+    ],
+
     /*
      * The Eloquent user model used by the auth service.
      * Override with your own model if needed.
