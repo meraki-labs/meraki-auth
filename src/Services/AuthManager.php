@@ -3,46 +3,74 @@
 namespace Meraki\Packages\Auth\Services;
 
 use Illuminate\Auth\Events\PasswordReset;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Meraki\Packages\Auth\Contracts\AuthManager as AuthManagerContract;
+use Meraki\Packages\Auth\Contracts\PlatformDriverContract;
+use Meraki\Packages\Auth\Drivers\ApiDriver;
+use Meraki\Packages\Auth\Drivers\SpaDriver;
+use Meraki\Packages\Auth\Drivers\WebDriver;
 
 class AuthManager implements AuthManagerContract
 {
+    protected array $drivers = [];
+
+    protected array $driverMap = [
+        'web' => WebDriver::class,
+        'api' => ApiDriver::class,
+        'spa' => SpaDriver::class,
+    ];
+
+    public function platform(string $name = null): PlatformDriverContract
+    {
+        $name ??= config('meraki-auth.default_platform', 'web');
+
+        if (!isset($this->drivers[$name])) {
+            $this->drivers[$name] = $this->resolveDriver($name);
+        }
+
+        return $this->drivers[$name];
+    }
+
+    protected function resolveDriver(string $name): PlatformDriverContract
+    {
+        $driverConfig = config("meraki-auth.platforms.{$name}.driver", $name);
+        $class = $this->driverMap[$driverConfig] ?? null;
+
+        if (!$class) {
+            throw new \InvalidArgumentException("Unsupported auth platform driver: [{$name}]");
+        }
+
+        return app($class);
+    }
+
+    // Backward-compatible proxy methods (web platform)
+
     public function register(array $credentials): object
     {
-        $model = config('meraki-auth.user_model');
-
-        return $model::create([
-            'name'     => $credentials['name'],
-            'email'    => $credentials['email'],
-            'password' => $credentials['password'],
-        ]);
+        $result = $this->platform('web')->register($credentials);
+        return $result->data()['user'];
     }
 
     public function login(array $credentials, bool $remember = false): bool
     {
-        return Auth::attempt([
-            'email'    => $credentials['email'],
-            'password' => $credentials['password'],
-        ], $remember);
+        return $this->platform('web')->login($credentials, compact('remember'))->success();
     }
 
     public function logout(): void
     {
-        Auth::logout();
+        $this->platform('web')->logout();
     }
 
     public function user(): ?object
     {
-        return Auth::user();
+        return $this->platform('web')->user();
     }
 
     public function check(): bool
     {
-        return Auth::check();
+        return $this->platform('web')->check();
     }
 
     public function changePassword(object $user, string $currentPassword, string $newPassword): bool

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Adapters;
+namespace Meraki\Packages\Auth\Tests\Unit\Adapters;
 
 use Illuminate\Support\Facades\Auth;
 use Meraki\Packages\Auth\Adapters\AuthDriverAdapter;

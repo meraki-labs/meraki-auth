@@ -22,8 +22,16 @@ class AuthServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        if (!config('meraki-auth.enabled', true)) {
+            return;
+        }
+
         $this->loadRoutesFrom(__DIR__ . '/../routes/auth.php');
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'meraki-auth');
+
+        if (config('meraki-auth.platforms.api.enabled', false)) {
+            $this->loadRoutesFrom(__DIR__ . '/../routes/api-auth.php');
+        }
 
         $this->publishes([
             __DIR__ . '/../config/meraki-auth.php' => config_path('meraki-auth.php'),
@@ -37,6 +45,13 @@ class AuthServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__ . '/../database/migrations/create_auth_tables.php'
                     => database_path('migrations/' . date('Y_m_d_His') . '_create_auth_tables.php'),
+            ], ['meraki-migrations', 'meraki-auth-migrations']);
+        }
+
+        if (!class_exists('CreatePersonalAccessTokensTable')) {
+            $this->publishes([
+                __DIR__ . '/../database/migrations/create_personal_access_tokens_table.php'
+                    => database_path('migrations/' . date('Y_m_d_His', time() + 1) . '_create_personal_access_tokens_table.php'),
             ], ['meraki-migrations', 'meraki-auth-migrations']);
         }
 

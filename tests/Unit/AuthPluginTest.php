@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Meraki\Packages\Auth\Tests\Unit;
 
 use Illuminate\Contracts\Foundation\Application;
 use Meraki\Core\CoreManager;
