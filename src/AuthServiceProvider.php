@@ -67,6 +67,13 @@ class AuthServiceProvider extends ServiceProvider
             $view->with('themeVars', config('meraki-auth.ui.theme', []));
         });
 
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                \Meraki\Packages\Auth\Console\Commands\InstallCommand::class,
+                \Meraki\Packages\Auth\Console\Commands\UninstallCommand::class,
+            ]);
+        }
+
         (new AuthPlugin())->boot($this->app);
         if ($this->app->make(AuthDriverManager::class)->isActive()) {
             $this->registerPermissions();
