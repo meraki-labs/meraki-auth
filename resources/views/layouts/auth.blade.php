@@ -11,8 +11,23 @@
     @else
         <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
     @endif
+    @php $t = $themeVars ?? []; @endphp
+    <style>
+        :root {
+            --ma-bg: {{ $t['bg'] ?? '#FDFDFC' }};
+            --ma-bg-dark: {{ $t['bg_dark'] ?? '#0a0a0a' }};
+            --ma-text: {{ $t['text'] ?? '#1b1b18' }};
+            --ma-text-dark: {{ $t['text_dark'] ?? '#EDEDEC' }};
+            --ma-primary: {{ $t['primary'] ?? '#6c63ff' }};
+            --ma-primary-dark: {{ $t['primary_dark'] ?? '#8b85ff' }};
+            --ma-border: {{ $t['border'] ?? '#e3e3e0' }};
+            --ma-border-dark: {{ $t['border_dark'] ?? '#3E3E3A' }};
+            --ma-radius: {{ $t['radius'] ?? '0.5rem' }};
+            --ma-font: {{ $t['font'] ?? '"Instrument Sans", sans-serif' }};
+        }
+    </style>
 </head>
-<body class="bg-[#FDFDFC] dark:bg-[#0a0a0a] text-[#1b1b18] dark:text-[#EDEDEC] min-h-screen flex flex-col items-center justify-center p-6 font-[Instrument_Sans,ui-sans-serif,system-ui,sans-serif]">
+<body class="bg-[var(--ma-bg)] dark:bg-[var(--ma-bg-dark)] text-[var(--ma-text)] dark:text-[var(--ma-text-dark)] min-h-screen flex flex-col items-center justify-center p-6" style="font-family: var(--ma-font)">
     <div class="w-full max-w-sm">
         <div class="text-center mb-8">
             <a href="/" class="text-base font-semibold tracking-tight">{{ config('app.name', 'Laravel') }}</a>
