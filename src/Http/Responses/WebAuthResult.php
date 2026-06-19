@@ -25,6 +25,6 @@ class WebAuthResult implements AuthResultContract
 
     public function data(): array
     {
-        return $this->payload;
+        return array_merge($this->payload, ['redirect' => $this->redirectTo]);
     }
 }

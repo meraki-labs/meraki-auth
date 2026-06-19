@@ -63,21 +63,5 @@ class AuthServiceProvider extends ServiceProvider
         }
 
         (new AuthPlugin())->boot($this->app);
-        if ($this->app->make(AuthDriverManager::class)->isActive()) {
-            $this->registerPermissions();
-        }
-    }
-
-    protected function registerPermissions(): void
-    {
-        if (!$this->app->bound(PermissionRegistry::class)) {
-            return;
-        }
-
-        $permissions = config('meraki-auth.permissions', []);
-
-        if (!empty($permissions)) {
-            $this->app->make(PermissionRegistry::class)->register($permissions);
-        }
     }
 }

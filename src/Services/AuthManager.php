@@ -79,7 +79,7 @@ class AuthManager implements AuthManagerContract
             return false;
         }
 
-        $user->update(['password' => $newPassword]);
+        $user->forceFill(['password' => Hash::make($newPassword)])->save();
 
         return true;
     }
