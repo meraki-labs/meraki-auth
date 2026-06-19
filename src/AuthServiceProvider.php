@@ -4,6 +4,7 @@ namespace Meraki\Packages\Auth;
 
 use Illuminate\Support\ServiceProvider;
 use Meraki\Core\Modules\PermissionRegistry;
+use Meraki\Packages\Auth\Adapters\AuthDriverAdapter;
 use Meraki\Packages\Auth\Contracts\AuthManager;
 use Meraki\Packages\Auth\Services\AuthManager as AuthManagerImpl;
 
@@ -14,6 +15,9 @@ class AuthServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__ . '/../config/meraki-auth.php', 'meraki-auth');
 
         $this->app->singleton(AuthManager::class, AuthManagerImpl::class);
+        $this->app->singleton(AuthDriverAdapter::class);
+
+        (new AuthPlugin())->register($this->app);
     }
 
     public function boot(): void
@@ -52,6 +56,7 @@ class AuthServiceProvider extends ServiceProvider
         }
 
         $this->registerPermissions();
+        (new AuthPlugin())->boot($this->app);
     }
 
     protected function registerPermissions(): void

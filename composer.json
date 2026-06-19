@@ -2,7 +2,7 @@
   "name": "merakilab/meraki-auth",
   "description": "Authentication package for the MerakiLabs ecosystem",
   "version": "dev-main",
-  "type": "library",
+  "type": "meraki-plugin",
   "license": "MIT",
   "autoload": {
     "psr-4": {
@@ -15,6 +15,9 @@
     }
   },
   "extra": {
+    "meraki": {
+      "plugin": "plugin.json"
+    },
     "laravel": {
       "providers": [
         "Meraki\\Packages\\Auth\\AuthServiceProvider"
@@ -37,16 +40,13 @@
     "merakilab/meraki-core": "*"
   },
   "require-dev": {
-    "phpunit/phpunit": "^11.0",
     "orchestra/testbench": "^10.0",
+    "phpunit/phpunit": "^11.0",
     "mockery/mockery": "^1.6"
   },
+  "scripts": {
+    "test": "vendor/bin/phpunit"
+  },
   "minimum-stability": "dev",
-  "prefer-stable": true,
-  "repositories": {
-    "meraki-core": {
-      "type": "path",
-      "url": "/Users/Shared/Development/MerakiLabs/meraki-core"
-    }
-  }
+  "prefer-stable": true
 }

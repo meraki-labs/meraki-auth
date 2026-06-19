@@ -1,0 +1,9 @@
+{
+  "id": "meraki-auth",
+  "name": "Meraki Authentication",
+  "version": "1.0.0",
+  "description": "Authentication plugin for the Meraki ecosystem",
+  "provider": "Meraki\\Packages\\Auth\\AuthServiceProvider",
+  "config": "meraki-auth",
+  "requires": []
+}
