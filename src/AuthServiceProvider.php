@@ -3,6 +3,7 @@
 namespace Meraki\Packages\Auth;
 
 use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Meraki\Core\Modules\PermissionRegistry;
 use Meraki\Packages\Auth\Adapters\AuthDriverAdapter;
@@ -61,6 +62,10 @@ class AuthServiceProvider extends ServiceProvider
                     => database_path('migrations/' . date('Y_m_d_His', time() + 1) . '_create_personal_access_tokens_table.php'),
             ], ['meraki-migrations', 'meraki-auth-migrations']);
         }
+
+        View::composer('meraki-auth::*', function ($view) {
+            $view->with('themeVars', config('meraki-auth.ui.theme', []));
+        });
 
         (new AuthPlugin())->boot($this->app);
         if ($this->app->make(AuthDriverManager::class)->isActive()) {
