@@ -14,7 +14,10 @@ if (!config('meraki-auth.platforms.web.enabled', true)) {
 }
 
 $webPrefix     = config('meraki-auth.platforms.web.routes.prefix', '');
-$webMiddleware = config('meraki-auth.platforms.web.routes.middleware', ['web']);
+$webMiddleware = array_merge(
+    config('meraki-auth.platforms.web.routes.middleware', ['web']),
+    ['meraki.auth.active']
+);
 
 Route::middleware($webMiddleware)
     ->prefix($webPrefix)

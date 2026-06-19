@@ -4,6 +4,8 @@
   "version": "dev-main",
   "type": "meraki-plugin",
   "license": "MIT",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
   "autoload": {
     "psr-4": {
       "Meraki\\Packages\\Auth\\": "src/"
@@ -23,7 +25,8 @@
         "Meraki\\Packages\\Auth\\AuthServiceProvider"
       ],
       "aliases": {
-        "MerakiAuth": "Meraki\\Packages\\Auth\\Facades\\MerakiAuth"
+        "MerakiAuth": "Meraki\\Packages\\Auth\\Facades\\MerakiAuth",
+        "MerakiAuthDriver": "Meraki\\Packages\\Auth\\Facades\\MerakiAuthDriver"
       }
     }
   },

@@ -4,6 +4,11 @@ return [
 
     'enabled' => env('MERAKI_AUTH_ENABLED', true),
 
+    'driver' => [
+        'name'   => 'meraki-auth',
+        'active' => env('MERAKI_AUTH_ACTIVE', true),
+    ],
+
     'user_model' => env('MERAKI_AUTH_USER_MODEL', \Meraki\Packages\Auth\Models\User::class),
 
     'default_platform' => env('MERAKI_AUTH_PLATFORM', 'web'),
@@ -52,6 +57,10 @@ return [
         'remember_me'        => env('MERAKI_AUTH_REMEMBER_ME', true),
     ],
 
+    /*
+     * Permissions declared by this package.
+     * Collected by PermissionRegistry (meraki-core) and consumed by IAM packages.
+     */
     'permissions' => [
         ['module' => 'auth', 'name' => 'auth.login',           'label' => 'Login'],
         ['module' => 'auth', 'name' => 'auth.register',        'label' => 'Register'],
