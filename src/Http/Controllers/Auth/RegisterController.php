@@ -26,7 +26,8 @@ class RegisterController extends Controller
             'password' => ['required', 'min:8', 'confirmed'],
         ]);
 
-        $user = $this->auth->register($data);
+        $result = $this->auth->platform('web')->register($data);
+        $user = $result->data()['user'];
         event(new Registered($user));
         Auth::login($user);
 
@@ -35,6 +36,6 @@ class RegisterController extends Controller
             return redirect()->route('verification.notice');
         }
 
-        return redirect()->route('dashboard');
+        return redirect($result->data()['redirect'] ?? config('meraki-auth.platforms.web.redirects.register', '/dashboard'));
     }
 }

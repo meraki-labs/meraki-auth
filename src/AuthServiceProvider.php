@@ -3,6 +3,7 @@
 namespace Meraki\Packages\Auth;
 
 use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Meraki\Core\Modules\PermissionRegistry;
 use Meraki\Packages\Auth\Adapters\AuthDriverAdapter;
@@ -62,22 +63,17 @@ class AuthServiceProvider extends ServiceProvider
             ], ['meraki-migrations', 'meraki-auth-migrations']);
         }
 
+        View::composer('meraki-auth::*', function ($view) {
+            $view->with('themeVars', config('meraki-auth.ui.theme', []));
+        });
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                \Meraki\Packages\Auth\Console\Commands\InstallCommand::class,
+                \Meraki\Packages\Auth\Console\Commands\UninstallCommand::class,
+            ]);
+        }
+
         (new AuthPlugin())->boot($this->app);
-        if ($this->app->make(AuthDriverManager::class)->isActive()) {
-            $this->registerPermissions();
-        }
-    }
-
-    protected function registerPermissions(): void
-    {
-        if (!$this->app->bound(PermissionRegistry::class)) {
-            return;
-        }
-
-        $permissions = config('meraki-auth.permissions', []);
-
-        if (!empty($permissions)) {
-            $this->app->make(PermissionRegistry::class)->register($permissions);
-        }
     }
 }

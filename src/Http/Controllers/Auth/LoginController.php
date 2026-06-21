@@ -6,9 +6,12 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Meraki\Packages\Auth\Contracts\AuthManager;
 
 class LoginController extends Controller
 {
+    public function __construct(private AuthManager $auth) {}
+
     public function create()
     {
         return view('meraki-auth::auth.login');
@@ -21,7 +24,9 @@ class LoginController extends Controller
             'password' => ['required'],
         ]);
 
-        if (!Auth::attempt($credentials, $request->boolean('remember'))) {
+        $result = $this->auth->platform('web')->login($credentials, ['remember' => $request->boolean('remember')]);
+
+        if (!$result->success()) {
             throw ValidationException::withMessages([
                 'email' => __('auth.failed'),
             ]);
@@ -29,7 +34,7 @@ class LoginController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard'));
+        return redirect()->intended($result->data()['redirect'] ?? config('meraki-auth.platforms.web.redirects.login', '/dashboard'));
     }
 
     public function destroy(Request $request)

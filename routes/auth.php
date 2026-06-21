@@ -8,6 +8,7 @@ use Meraki\Packages\Auth\Http\Controllers\Auth\RegisterController;
 use Meraki\Packages\Auth\Http\Controllers\Auth\ResendEmailVerificationController;
 use Meraki\Packages\Auth\Http\Controllers\Auth\ResetPasswordController;
 use Meraki\Packages\Auth\Http\Controllers\Auth\VerifyEmailController;
+use Meraki\Packages\Auth\Http\Controllers\Admin\AdminUserController;
 
 if (!config('meraki-auth.platforms.web.enabled', true)) {
     return;
@@ -54,5 +55,9 @@ Route::middleware($webMiddleware)
                     ->middleware('throttle:6,1')
                     ->name('verification.send');
             }
+        });
+
+        Route::middleware(['auth'])->prefix('meraki-admin')->name('meraki.admin.')->group(function () {
+            Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
         });
     });
