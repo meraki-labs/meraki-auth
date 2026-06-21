@@ -2,6 +2,7 @@
 
 namespace Meraki\Packages\Auth\Http\Controllers\Auth;
 
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -26,6 +27,7 @@ class RegisterController extends Controller
         ]);
 
         $user = $this->auth->register($data);
+        event(new Registered($user));
         Auth::login($user);
 
         if ($user instanceof MustVerifyEmail && !$user->hasVerifiedEmail()) {
