@@ -4,6 +4,8 @@ namespace Meraki\Packages\Auth\Contracts;
 
 interface AuthManager
 {
+    public function platform(string $name = null): PlatformDriverContract;
+
     public function register(array $credentials): object;
 
     public function login(array $credentials, bool $remember = false): bool;
